@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="longjunwang.com.mappers.IUserDao">
 
-    <select id="queryUserInfoById" parameterType="java.lang.Long" resultType="longjunwang.com.entity.User">
+    <select id="queryUserInfoById" parameterType="java.lang.String" resultType="longjunwang.com.entity.User">
         SELECT id, userId, userHead, createTime
         FROM user
         where id = #{id}

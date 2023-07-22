@@ -1,7 +1,9 @@
 package longjunwang.com.mappers;
 
+import longjunwang.com.entity.User;
+
 public interface IUserDao {
 
-    String queryUserInfoById(String uId);
+    User queryUserInfoById(String uId);
 
 }

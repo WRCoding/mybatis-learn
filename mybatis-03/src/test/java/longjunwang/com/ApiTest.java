@@ -1,5 +1,6 @@
 package longjunwang.com;
 
+import longjunwang.com.entity.User;
 import longjunwang.com.mappers.IUserDao;
 import longjunwang.com.mybatis.binding.MapperRegistry;
 import longjunwang.com.mybatis.io.Resource;
@@ -31,7 +32,7 @@ public class ApiTest {
         SqlSessionFactory sqlSessionFactory = SqlSessionFactoryBuilder.build(resourceAsReader);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-        String res = userDao.queryUserInfoById("10011");
+        User res = userDao.queryUserInfoById("10011");
         logger.info("res:{}",res);
     }
 }

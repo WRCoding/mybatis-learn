@@ -5,6 +5,7 @@ import longjunwang.com.mybatis.session.SqlSession;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * desc: MapperProxy
@@ -23,6 +24,8 @@ public class MapperProxy<T> implements InvocationHandler {
     /** 要代理的mapper接口 */
     private Class<T> mapperInterface;
 
+    private Map<Method, MapperMethod> methodCache;
+
     public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface) {
         this.sqlSession = sqlSession;
         this.mapperInterface = mapperInterface;
@@ -33,8 +36,18 @@ public class MapperProxy<T> implements InvocationHandler {
         if (filterClass(method)) {
             return method.invoke(this, args);
         } else {
-            return sqlSession.selectOne(mapperInterface.getName()+ "." +method.getName(), args);
+            MapperMethod mapperMethod = cachedMapperMethod(method);
+            return mapperMethod.execute(sqlSession, args);
         }
+    }
+
+    private MapperMethod cachedMapperMethod(Method method){
+        MapperMethod mapperMethod = methodCache.get(method);
+        if (Objects.isNull(mapperMethod)){
+            mapperMethod = new MapperMethod(mapperInterface, method, sqlSession.getConfiguration());
+            methodCache.put(method, mapperMethod);
+        }
+        return methodCache.get(method);
     }
 
     private static boolean filterClass(Method method) {

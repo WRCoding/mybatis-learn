@@ -68,7 +68,6 @@ public class XMLConfigBuilder extends BaseBuilder {
                 Pattern pattern = Pattern.compile("(#\\{(.*?)})");
                 Matcher matcher = pattern.matcher(sql);
                 for (int i = 1; matcher.find(); i++) {
-                    String group = matcher.group(0);
                     String g1 = matcher.group(1);
                     String g2 = matcher.group(2);
                     parameter.put(i, g2);
