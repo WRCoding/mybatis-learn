@@ -32,7 +32,9 @@ public class ApiTest {
         SqlSessionFactory sqlSessionFactory = SqlSessionFactoryBuilder.build(resourceAsReader);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         IUserDao userDao = sqlSession.getMapper(IUserDao.class);
-        User res = userDao.queryUserInfoById(1L);
-        logger.info("res:{}",res);
+        for (int i = 0; i < 50; i++) {
+            User res = userDao.queryUserInfoById(1L);
+            logger.info("res:{}",res);
+        }
     }
 }

@@ -1,20 +1,24 @@
 package longjunwang.com.mybatis.datasource.unpooled;
 
+import lombok.Data;
+
 import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
- * desc: UnpooledDataSource
+ * desc: UnPooledDataSource
  *
  * @author ink
  * date:2023-07-23 13:22
  */
+@Data
 public class UnPooledDataSource implements DataSource {
 
     private ClassLoader driverClassLoader;
@@ -95,14 +99,40 @@ public class UnPooledDataSource implements DataSource {
         }
     }
 
+    private Connection doGetConnection(String username, String password) throws SQLException {
+        Properties properties = new Properties();
+        if (Objects.nonNull(driverProperties)){
+            properties.putAll(driverProperties);
+        }
+        if (Objects.nonNull(username)){
+            properties.setProperty("user", username);
+        }
+        if (Objects.nonNull(password)){
+            properties.setProperty("password", password);
+        }
+        return doGetConnection(properties);
+    }
+
+    private Connection doGetConnection(Properties properties) throws SQLException {
+        initializerDriver();
+        Connection connection = DriverManager.getConnection(url, properties);
+        if (Objects.nonNull(autoCommit) && autoCommit != connection.getAutoCommit()) {
+            connection.setAutoCommit(autoCommit);
+        }
+        if (Objects.nonNull(defaultTransactionIsolationLevel)) {
+            connection.setTransactionIsolation(defaultTransactionIsolationLevel);
+        }
+        return connection;
+    }
+
     @Override
     public Connection getConnection() throws SQLException {
-        return null;
+        return doGetConnection(username, password);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return null;
+        return doGetConnection(username, password);
     }
 
     @Override

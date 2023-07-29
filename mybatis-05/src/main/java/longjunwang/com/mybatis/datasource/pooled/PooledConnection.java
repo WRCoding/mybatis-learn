@@ -80,4 +80,8 @@ public class PooledConnection implements InvocationHandler {
         return System.currentTimeMillis() - lastUsedTimestamp;
     }
 
+    public long getCheckOutTime(){
+        return System.currentTimeMillis() - checkoutTimestamp;
+    }
+
 }
